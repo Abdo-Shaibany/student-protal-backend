@@ -31,12 +31,9 @@ export const validateLogin = (req: Request, res: Response, next: NextFunction): 
 export const paginationSchema = Joi.object({
     page: Joi.number().integer().min(1).default(1),
     pageSize: Joi.number().integer().min(1).default(10),
-    orderBy: Joi.object().pattern(
-        Joi.string(),
-        Joi.string().valid('asc', 'desc')
-    ).optional(),
+    orderBy: Joi.string().optional(),
     search: Joi.string().optional().allow(''),
-    filters: Joi.object().optional(),
+    filters: Joi.string().optional(),
 });
 
 export const requestSubmissionSchema = Joi.object({

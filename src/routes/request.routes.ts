@@ -6,6 +6,7 @@ import {
     validateRequestSubmission,
     validateUpdateRequestStatus,
 } from '../validations/api.validation';
+import { upload } from '../middlewares/fileUpload.middleware';
 
 const router = Router();
 
@@ -19,6 +20,6 @@ router.get('/:id', authMiddleware, requestController.getRequestById);
 
 router.put('/:id/status', authMiddleware, validateUpdateRequestStatus, requestController.updateRequestStatus);
 
-router.post('/', validateRequestSubmission, requestController.submitStudentRequest);
+router.post('/', upload.array('fileUpload'), validateRequestSubmission, requestController.submitStudentRequest);
 
 export default router;

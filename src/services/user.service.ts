@@ -33,6 +33,13 @@ export const getUserById = async (id: string) => {
     });
 };
 
+export const getUserByDepartmentId = async (id: string) => {
+    return prisma.user.findFirst({
+        where: { departmentId: id },
+        include: { department: true },
+    });
+};
+
 export const updateUserTotalRequests = async (id: string) => {
     return prisma.user.update({
         where: { id },

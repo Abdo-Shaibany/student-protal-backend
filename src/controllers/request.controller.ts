@@ -72,15 +72,16 @@ export const updateRequestStatus = async (req: Request, res: Response, next: Nex
  */
 export const submitStudentRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        await prisma.$transaction(async (_) => {
-            const data = req.body;
-            const user = await userService.getUserById(data.departmentId);
-            const newRequest = await requestService.submitStudentRequest(data);
-            await departmentService.updateDepartmentTotalRequests(data.departmentId);
-            if (user)
-                await userService.updateUserTotalRequests(user.id);
-            res.status(201).json(newRequest);
-        });
+        const data = req.body;
+        const files = req.files;
+        console.log(files);
+        const user = await userService.getUserByDepartmentId(data.departmentId);
+        const newRequest = await requestService.submitStudentRequest({ ...data, assignedToId: user?.id });
+        await departmentService.updateDepartmentTotalRequests(data.departmentId);
+        if (user)
+            await userService.updateUserTotalRequests(user.id);
+
+        res.status(201).json(newRequest);
     } catch (error) {
         next(error);
     }
@@ -93,6 +94,7 @@ export const submitStudentRequest = async (req: Request, res: Response, next: Ne
 export const getDailyCounts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const dailyCounts = await requestService.fetchRequestCountsDaily();
+        console.log(dailyCounts, " hi");
         res.json(dailyCounts);
     } catch (error) {
         next(error);

@@ -47,12 +47,13 @@ model Request {
     title         String
     phone         String
     message       String
-    createdAt     DateTime               @default(now())
+    createdAt     String
+    createdAtDate String
     status        RequestStatus
     departmentId  String
-    assignedToId  String
+    assignedToId  String?
     department    Department             @relation(fields: [departmentId], references: [id])
-    assignedTo    User                   @relation("UserAssignedRequests", fields: [assignedToId], references: [id])
+    assignedTo    User?                  @relation("UserAssignedRequests", fields: [assignedToId], references: [id])
     files         RequestFile[]
     statusHistory RequestStatusHistory[]
 }

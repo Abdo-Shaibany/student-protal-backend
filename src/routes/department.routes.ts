@@ -5,8 +5,8 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-router.get('/', authMiddleware, departmentController.getDepartments);
-router.post('/', authMiddleware, validateDepartment, departmentController.createDepartment);
+router.get('/', departmentController.getDepartments);
+router.post('/', validateDepartment, departmentController.createDepartment);
 router.put('/:id', authMiddleware, validateDepartment, departmentController.updateDepartment);
 router.delete('/:id', authMiddleware, departmentController.deleteDepartment);
 router.get('/report', authMiddleware, departmentController.getDepartmentReport);

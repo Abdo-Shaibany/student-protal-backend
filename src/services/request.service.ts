@@ -74,12 +74,13 @@ export const updateRequestStatus = async (id: string, status: RequestStatus, com
             comment,
             request: { connect: { id } },
         },
+
     });
     return updatedRequest;
 };
 
 export const submitStudentRequest = async (data: any) => {
-    // Data includes: fullName, phone, title, departmentId, message and optional fileUpload info.
+    const now = new Date();
     return prisma.request.create({
         data: {
             requestNumber: `REQ-${Date.now()}`,
@@ -89,39 +90,58 @@ export const submitStudentRequest = async (data: any) => {
             message: data.message,
             status: 'pending',
             department: { connect: { id: data.departmentId } },
-            assignedTo: { connect: { id: data.assignedToId } }, // or leave null if unassigned
+            assignedTo: data.assignedToId ? { connect: { id: data.assignedToId } } : undefined,
+            createdAtDate: `${now.getDay()}-${now.getMonth() + 1}-${now.getFullYear()}`,
+            createdAt: `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`,
         },
     });
 };
 
 
-export const fetchRequestCountsDaily = async (): Promise<{ date: string; count: number }[]> => {
+export const fetchRequestCountsDaily = async (): Promise<{ date: string; count: string }[]> => {
     const results = await prisma.$queryRaw<
         { date: string; count: number }[]
-    >`SELECT date(createdAt) as date, count(*) as count FROM Request GROUP BY date(createdAt)`;
-    return results;
+    >`SELECT createdAtDate as date, COUNT(*) AS count
+        FROM Request
+        GROUP BY date
+        ORDER BY date ASC;`;
+
+    const serializedResults = results.map(record => ({
+        date: record.date,
+        count: record.count.toString(),
+    }));
+
+    return serializedResults;
 };
 
 export const getRequestTodayReport = async (): Promise<{ pending: number; late: number }> => {
     const today = new Date().toISOString().split('T')[0];
+    console.log()
     const pending = await prisma.request.count({
         where: {
             status: 'pending',
-            createdAt: {
-                gte: new Date(today),
+            createdAtDate: {
+                gte: today,
             },
         },
+        orderBy: {
+            createdAtDate: "desc"
+        }
     });
     // Late: pending and created more than 3 days ago
     const threeDaysAgo = new Date();
-    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3)
+
     const late = await prisma.request.count({
         where: {
             status: 'pending',
             createdAt: {
-                lt: threeDaysAgo,
+                lt: threeDaysAgo.toISOString().split('T')[0],
             },
         },
+        orderBy: {
+            createdAtDate: "desc"
+        }
     });
     return { pending, late };
 };

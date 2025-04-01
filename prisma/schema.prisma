@@ -1,0 +1,76 @@
+// prisma/schema.prisma
+
+datasource db {
+    provider = "sqlite"
+    url      = "file:./dev.db"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+enum RequestStatus {
+    pending
+    inProgress
+    completed
+}
+
+enum FileType {
+    pdf
+    image
+}
+
+model Department {
+    id            String    @id @default(uuid())
+    name          String
+    totalRequests Int?
+    requests      Request[]
+    users         User[]
+}
+
+model User {
+    id               String     @id @default(uuid())
+    name             String
+    phone            String
+    departmentId     String
+    department       Department @relation(fields: [departmentId], references: [id])
+    totalRequests    Int
+    password         String
+    isAdmin          Boolean
+    assignedRequests Request[]  @relation("UserAssignedRequests")
+}
+
+model Request {
+    id            String                 @id @default(uuid())
+    requestNumber String
+    studentName   String
+    title         String
+    phone         String
+    message       String
+    createdAt     DateTime               @default(now())
+    status        RequestStatus
+    departmentId  String
+    assignedToId  String
+    department    Department             @relation(fields: [departmentId], references: [id])
+    assignedTo    User                   @relation("UserAssignedRequests", fields: [assignedToId], references: [id])
+    files         RequestFile[]
+    statusHistory RequestStatusHistory[]
+}
+
+model RequestFile {
+    id        String   @id @default(uuid())
+    name      String
+    type      FileType
+    url       String
+    request   Request  @relation(fields: [requestId], references: [id])
+    requestId String
+}
+
+model RequestStatusHistory {
+    id        String        @id @default(uuid())
+    status    RequestStatus
+    date      DateTime
+    comment   String?
+    request   Request       @relation(fields: [requestId], references: [id])
+    requestId String
+}

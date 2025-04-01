@@ -29,15 +29,15 @@ model Department {
 }
 
 model User {
-    id               String     @id @default(uuid())
+    id               String      @id @default(uuid())
     name             String
-    phone            String     @unique()
-    departmentId     String
-    department       Department @relation(fields: [departmentId], references: [id])
+    phone            String      @unique()
+    departmentId     String?
+    department       Department? @relation(fields: [departmentId], references: [id])
     totalRequests    Int
     password         String
     isAdmin          Boolean
-    assignedRequests Request[]  @relation("UserAssignedRequests")
+    assignedRequests Request[]   @relation("UserAssignedRequests")
 }
 
 model Request {

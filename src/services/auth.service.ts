@@ -19,9 +19,9 @@ export const submitLoginRequest = async (phone: string, password: string) => {
     }
 
     const token = jwt.sign(
-        { id: user.id, phone: user.phone, isAdmin: user.isAdmin, departmentId: user.departmentId },
-        JWT_SECRET,
-        { expiresIn: '1h' }
+        { id: user.id, phone: user.phone, isAdmin: user.isAdmin, departmentId: user.departmentId, name: "user.name" },
+        JWT_SECRET
     );
+
     return { token, user };
 };

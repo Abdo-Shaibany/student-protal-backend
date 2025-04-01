@@ -5,7 +5,8 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
     try {
         const { phone, password } = req.body;
         const result = await authService.submitLoginRequest(phone, password);
-        res.json(result);
+        console.log(result);
+        res.json({ ...result, user: {} });
     } catch (error) {
         next(error);
     }

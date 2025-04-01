@@ -30,7 +30,7 @@ export const adminMiddleware = (req: AuthRequest, res: Response, next: NextFunct
     if (req.user && req.user.isAdmin) {
         next();
     } else {
-        return res.status(403).json({ error: 'Admin privileges required' });
+        res.status(403).json({ error: 'Admin privileges required' });
     }
 };
 

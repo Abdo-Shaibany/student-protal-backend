@@ -18,6 +18,17 @@ export const updateDepartment = async (id: string, data: { name?: string; totalR
     });
 };
 
+export const updateDepartmentTotalRequests = async (id: string) => {
+    return prisma.department.update({
+        where: { id },
+        data: {
+            totalRequests: {
+                increment: 1
+            }
+        },
+    });
+}
+
 export const deleteDepartmentById = async (id: string) => {
     return prisma.department.delete({
         where: { id },

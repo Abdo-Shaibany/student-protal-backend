@@ -94,6 +94,7 @@ export const submitStudentRequest = async (data: any) => {
     });
 };
 
+
 export const fetchRequestCountsDaily = async (): Promise<{ date: string; count: number }[]> => {
     const results = await prisma.$queryRaw<
         { date: string; count: number }[]

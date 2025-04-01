@@ -23,7 +23,7 @@ enum FileType {
 model Department {
     id            String    @id @default(uuid())
     name          String
-    totalRequests Int?
+    totalRequests Int       @default(0)
     requests      Request[]
     users         User[]
 }

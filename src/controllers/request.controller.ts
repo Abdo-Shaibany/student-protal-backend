@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import * as requestService from '../services/request.service';
+import * as departmentService from '../services/department.service';
 import { AuthRequest } from '../middlewares/auth.middleware';
 
 /**
@@ -68,9 +69,9 @@ export const updateRequestStatus = async (req: Request, res: Response, next: Nex
  */
 export const submitStudentRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        // Here, you may also handle file uploads via req.files if using Multer.
         const data = req.body;
         const newRequest = await requestService.submitStudentRequest(data);
+        await departmentService.updateDepartmentTotalRequests(data.departmentId);
         res.status(201).json(newRequest);
     } catch (error) {
         next(error);

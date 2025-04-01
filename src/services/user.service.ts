@@ -8,6 +8,24 @@ export const fetchUsers = async () => {
     });
 };
 
+export const getUserById = async (id: string) => {
+    return prisma.user.findUnique({
+        where: { id },
+        include: { department: true },
+    });
+};
+
+export const updateUserTotalRequests = async (id: string) => {
+    return prisma.user.update({
+        where: { id },
+        data: {
+            totalRequests: {
+                increment: 1
+            }
+        },
+    });
+}
+
 export const createUser = async (data: { name: string; phone: string; departmentId: string; password: string; isAdmin?: boolean; totalRequests?: number; }) => {
     const hashedPassword = await bcrypt.hash(data.password, 10);
     return prisma.user.create({

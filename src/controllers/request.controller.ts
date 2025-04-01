@@ -1,7 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import * as requestService from '../services/request.service';
 import * as departmentService from '../services/department.service';
+import * as userService from '../services/user.service';
 import { AuthRequest } from '../middlewares/auth.middleware';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 /**
  * GET /api/requests
@@ -69,10 +72,15 @@ export const updateRequestStatus = async (req: Request, res: Response, next: Nex
  */
 export const submitStudentRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const data = req.body;
-        const newRequest = await requestService.submitStudentRequest(data);
-        await departmentService.updateDepartmentTotalRequests(data.departmentId);
-        res.status(201).json(newRequest);
+        await prisma.$transaction(async (_) => {
+            const data = req.body;
+            const user = await userService.getUserById(data.departmentId);
+            const newRequest = await requestService.submitStudentRequest(data);
+            await departmentService.updateDepartmentTotalRequests(data.departmentId);
+            if (user)
+                await userService.updateUserTotalRequests(user.id);
+            res.status(201).json(newRequest);
+        });
     } catch (error) {
         next(error);
     }

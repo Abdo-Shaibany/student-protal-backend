@@ -34,7 +34,7 @@ model User {
     phone            String      @unique()
     departmentId     String?
     department       Department? @relation(fields: [departmentId], references: [id])
-    totalRequests    Int
+    totalRequests    Int         @default(0)
     password         String
     isAdmin          Boolean
     assignedRequests Request[]   @relation("UserAssignedRequests")

@@ -2,9 +2,27 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
-export const fetchUsers = async () => {
+export const fetchUsers = async (search?: string, orderBy?: string) => {
+    if (search) {
+        console.log(search);
+        return prisma.user.findMany({
+            include: { department: true },
+            where: {
+                OR: [
+                    { name: { contains: search } },
+                    { phone: { contains: search } },
+                ],
+                isAdmin: false
+            },
+            orderBy: orderBy && (orderBy === 'asc' || orderBy === 'desc') ? { totalRequests: orderBy } : undefined,
+        });
+    }
     return prisma.user.findMany({
         include: { department: true },
+        where: {
+            isAdmin: false
+        },
+        orderBy: orderBy && (orderBy === 'asc' || orderBy === 'desc') ? { totalRequests: orderBy } : undefined,
     });
 };
 
@@ -40,13 +58,19 @@ export const createUser = async (data: { name: string; phone: string; department
     });
 };
 
-export const updateUser = async (id: string, data: Partial<{ name: string; phone: string; departmentId: string; password: string; isAdmin: boolean; }>) => {
+export const updateUser = async (id: string, data: Partial<{ name: string; phone: string; departmentId: string; password?: string; isAdmin: boolean; }>) => {
     if (data.password) {
         data.password = await bcrypt.hash(data.password, 10);
     }
     return prisma.user.update({
         where: { id },
-        data,
+        data: {
+            name: data.name,
+            phone: data.phone,
+            departmentId: data.departmentId,
+            password: data.password ? data.password : undefined,
+            isAdmin: data.isAdmin
+        },
     });
 };
 

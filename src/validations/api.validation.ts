@@ -83,7 +83,7 @@ export const userCreateSchema = Joi.object({
     name: Joi.string().required(),
     phone: Joi.string().required(),
     departmentId: Joi.string().required(),
-    password: Joi.string().min(6).required(),
+    password: Joi.string().required(),
     isAdmin: Joi.boolean().optional(),
 });
 
@@ -91,8 +91,9 @@ export const userUpdateSchema = Joi.object({
     name: Joi.string().optional(),
     phone: Joi.string().optional(),
     departmentId: Joi.string().optional(),
-    password: Joi.string().min(6).optional(),
+    password: Joi.string().optional(),
     isAdmin: Joi.boolean().optional(),
+    id: Joi.string().required(),
 });
 
 export const validateUserCreate = (req: Request, res: Response, next: NextFunction): void => {

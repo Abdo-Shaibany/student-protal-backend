@@ -6,8 +6,9 @@ import * as userService from '../services/user.service';
  * Fetch all users.
  */
 export const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { search, orderBy } = req.query
     try {
-        const users = await userService.fetchUsers();
+        const users = await userService.fetchUsers(search as string | undefined, orderBy as string | undefined);
         res.json(users);
     } catch (error) {
         next(error);

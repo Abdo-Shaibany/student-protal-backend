@@ -60,3 +60,4 @@ export const fetchDepartmentsReport = async (): Promise<any[]> => {
         };
     });
 };
+

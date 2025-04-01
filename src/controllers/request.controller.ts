@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import * as requestService from '../services/request.service';
 import * as departmentService from '../services/department.service';
 import * as userService from '../services/user.service';
+import * as fileService from '../services/files.service';
 import { AuthRequest } from '../middlewares/auth.middleware';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
@@ -74,9 +75,21 @@ export const submitStudentRequest = async (req: Request, res: Response, next: Ne
     try {
         const data = req.body;
         const files = req.files;
-        console.log(files);
         const user = await userService.getUserByDepartmentId(data.departmentId);
         const newRequest = await requestService.submitStudentRequest({ ...data, assignedToId: user?.id });
+        if (files) {
+            if (Array.isArray(files)) {
+                for (const file of files) {
+                    const requestFile = await fileService.createRequestFile({ name: file.originalname, type: 'image', url: file.path, requestId: newRequest.id });
+                }
+            } else if (files && typeof files === 'object') {
+                for (const key in files) {
+                    for (const file of files[key]) {
+                        const requestFile = await fileService.createRequestFile({ name: file.originalname, type: 'image', url: file.path, requestId: newRequest.id });
+                    }
+                }
+            }
+        }
         await departmentService.updateDepartmentTotalRequests(data.departmentId);
         if (user)
             await userService.updateUserTotalRequests(user.id);

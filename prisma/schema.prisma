@@ -59,12 +59,11 @@ model Request {
 }
 
 model RequestFile {
-    id        String   @id @default(uuid())
-    name      String
-    type      FileType
-    url       String
-    request   Request  @relation(fields: [requestId], references: [id])
-    requestId String
+    id      String    @id @default(uuid())
+    name    String
+    type    FileType
+    url     String
+    request Request[]
 }
 
 model RequestStatusHistory {

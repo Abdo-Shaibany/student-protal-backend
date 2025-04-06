@@ -23,7 +23,7 @@ npx prisma migrate dev
 ```
 6. قم بتوليد اسم المستخدم الافتراضي:
 ```
-npm seed
+npm run seed
 ```
 7. قم بتشغيل المشروع:
 ```

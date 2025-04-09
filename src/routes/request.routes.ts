@@ -10,6 +10,7 @@ import { upload } from '../middlewares/fileUpload.middleware';
 
 const router = Router();
 
+
 router.get('/daily-count', authMiddleware, requestController.getDailyCounts);
 
 router.get('/today-report', authMiddleware, requestController.getTodayReport);

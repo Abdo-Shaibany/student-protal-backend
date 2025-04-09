@@ -46,7 +46,7 @@ export const requestSubmissionSchema = Joi.object({
 
 export const updateRequestStatusSchema = Joi.object({
     status: Joi.string().valid('pending', 'inProgress', 'completed').required(),
-    comment: Joi.string().optional(),
+    comment: Joi.string().optional().allow(null),
 });
 
 export const validatePagination = (req: Request, res: Response, next: NextFunction): void => {

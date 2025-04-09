@@ -35,6 +35,7 @@ yarn.lock
 dist/
 build/
 coverage/
+upload/
 
 ### Misc ###
 *.swp

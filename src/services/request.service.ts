@@ -16,8 +16,9 @@ export const fetchRequests = async (pagination: Pagination, user?: any) => {
 
     if (search) {
         where.OR = [
-            { title: { contains: search, mode: 'insensitive' } },
-            { studentName: { contains: search, mode: 'insensitive' } },
+            { title: { contains: search } },
+            { requestNumber: { contains: search } },
+            { studentName: { contains: search } },
         ];
     }
 
@@ -81,6 +82,8 @@ export const updateRequestStatus = async (id: string, status: RequestStatus, com
 
 export const submitStudentRequest = async (data: any) => {
     const now = new Date();
+    const formattedDate = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'numeric', year: 'numeric' }).format(now);
+    const formattedTime = new Intl.DateTimeFormat('en-GB', { hour: 'numeric', minute: 'numeric', second: 'numeric' }).format(now);
     return prisma.request.create({
         data: {
             requestNumber: `REQ-${Date.now()}`,
@@ -91,8 +94,8 @@ export const submitStudentRequest = async (data: any) => {
             status: 'pending',
             department: { connect: { id: data.departmentId } },
             assignedTo: data.assignedToId ? { connect: { id: data.assignedToId } } : undefined,
-            createdAtDate: `${now.getDay()}-${now.getMonth() + 1}-${now.getFullYear()}`,
-            createdAt: `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`,
+            createdAtDate: formattedDate,
+            createdAt: formattedTime,
         },
     });
 };

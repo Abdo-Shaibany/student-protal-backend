@@ -26,6 +26,7 @@ export const updateDepartment = async (req: Request, res: Response, next: NextFu
         res.json(dept);
     } catch (error) {
         next(error);
+        console.log(error);
     }
 };
 

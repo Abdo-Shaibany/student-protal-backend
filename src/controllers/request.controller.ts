@@ -5,6 +5,7 @@ import * as userService from '../services/user.service';
 import * as fileService from '../services/files.service';
 import { AuthRequest } from '../middlewares/auth.middleware';
 import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 /**

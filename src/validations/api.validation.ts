@@ -3,6 +3,7 @@ import Joi from 'joi';
 
 const departmentSchema = Joi.object({
     name: Joi.string().required(),
+    id: Joi.string().optional(),
 });
 
 export const validateDepartment = (req: Request, res: Response, next: NextFunction) => {

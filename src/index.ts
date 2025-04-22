@@ -4,6 +4,7 @@ import departmentRoutes from './routes/department.routes';
 import authRoutes from './routes/auth.routes';
 import requestRoutes from './routes/request.routes';
 import userRoutes from './routes/user.routes';
+import requestTypes from './routes/requestType.route';
 
 const app = express();
 app.use(cors());
@@ -15,6 +16,7 @@ app.use('/api/departments', departmentRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/requests', requestRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/requestTypes', requestTypes);
 
 // Global error handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

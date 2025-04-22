@@ -3,6 +3,7 @@ import * as requestService from '../services/request.service';
 import * as departmentService from '../services/department.service';
 import * as userService from '../services/user.service';
 import * as fileService from '../services/files.service';
+import * as requestTypeService from '../services/requestTypes.service';
 import { AuthRequest } from '../middlewares/auth.middleware';
 import { PrismaClient } from '@prisma/client';
 
@@ -92,6 +93,7 @@ export const submitStudentRequest = async (req: Request, res: Response, next: Ne
             }
         }
         await departmentService.updateDepartmentTotalRequests(data.departmentId);
+        await requestTypeService.updateRequestTypeTotalRequests(data.departmentId);
         if (user)
             await userService.updateUserTotalRequests(user.id);
 

@@ -21,30 +21,42 @@ enum FileType {
 }
 
 model Department {
-    id            String    @id @default(uuid())
+    id            String        @id @default(uuid())
     name          String
-    totalRequests Int       @default(0)
+    totalRequests Int           @default(0)
     requests      Request[]
     users         User[]
+    RequestType   RequestType[]
+}
+
+model RequestType {
+    id            String     @id @default(uuid())
+    name          String
+    totalRequests Int        @default(0)
+    department    Department @relation(fields: [departmentId], references: [id])
+    requests      Request[]
+    users         User[]
+    departmentId  String
 }
 
 model User {
-    id               String      @id @default(uuid())
+    id               String       @id @default(uuid())
     name             String
-    phone            String      @unique()
+    phone            String       @unique()
     departmentId     String?
-    department       Department? @relation(fields: [departmentId], references: [id])
-    totalRequests    Int         @default(0)
+    department       Department?  @relation(fields: [departmentId], references: [id])
+    totalRequests    Int          @default(0)
     password         String
     isAdmin          Boolean
-    assignedRequests Request[]   @relation("UserAssignedRequests")
+    assignedRequests Request[]    @relation("UserAssignedRequests")
+    RequestType      RequestType? @relation(fields: [requestTypeId], references: [id])
+    requestTypeId    String?
 }
 
 model Request {
     id            String                 @id @default(uuid())
     requestNumber String
     studentName   String
-    title         String
     phone         String
     message       String
     createdAt     String
@@ -56,6 +68,8 @@ model Request {
     assignedTo    User?                  @relation("UserAssignedRequests", fields: [assignedToId], references: [id])
     files         RequestFile[]
     statusHistory RequestStatusHistory[]
+    RequestType   RequestType?           @relation(fields: [requestTypeId], references: [id])
+    requestTypeId String?
 }
 
 model RequestFile {

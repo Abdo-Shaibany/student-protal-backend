@@ -7,8 +7,24 @@ const departmentSchema = Joi.object({
     totalRequests: Joi.number().optional(),
 });
 
+const requestSchema = Joi.object({
+    name: Joi.string().required(),
+    departmentId: Joi.string().required(),
+    id: Joi.string().optional(),
+    totalRequests: Joi.number().optional(),
+});
+
 export const validateDepartment = (req: Request, res: Response, next: NextFunction) => {
     const { error } = departmentSchema.validate(req.body);
+    if (error) {
+        res.status(400).json({ error: error.details[0].message });
+        return
+    }
+    next();
+};
+
+export const validateRequestType = (req: Request, res: Response, next: NextFunction) => {
+    const { error } = requestSchema.validate(req.body);
     if (error) {
         res.status(400).json({ error: error.details[0].message });
         return
@@ -41,7 +57,7 @@ export const paginationSchema = Joi.object({
 export const requestSubmissionSchema = Joi.object({
     fullName: Joi.string().required(),
     phone: Joi.string().required(),
-    title: Joi.string().required(),
+    requestTypeId: Joi.string().required(),
     departmentId: Joi.string().required(),
     message: Joi.string().required(),
 });

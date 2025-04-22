@@ -88,10 +88,10 @@ export const submitStudentRequest = async (data: any) => {
         data: {
             requestNumber: `REQ-${Date.now()}`,
             studentName: data.fullName,
-            title: data.title,
             phone: data.phone,
             message: data.message,
             status: 'pending',
+            RequestType: { connect: { id: data.requestTypeId } },
             department: { connect: { id: data.departmentId } },
             assignedTo: data.assignedToId ? { connect: { id: data.assignedToId } } : undefined,
             createdAtDate: formattedDate,

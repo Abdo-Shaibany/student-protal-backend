@@ -11,3 +11,23 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
         next(error);
     }
 };
+
+export const changePassword = async (
+    req: any,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const userId = req.user.id;
+        const { currentPassword, newPassword } = req.body
+
+        const result = await authService.changePassword(
+            userId,
+            currentPassword,
+            newPassword
+        )
+        res.json(result)
+    } catch (err) {
+        next(err)
+    }
+}

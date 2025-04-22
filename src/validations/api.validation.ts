@@ -23,6 +23,28 @@ export const validateDepartment = (req: Request, res: Response, next: NextFuncti
     next();
 };
 
+export const passwordChangeSchema = Joi.object({
+    currentPassword: Joi.string().required(),
+    newPassword: Joi.string().min(8).required(),
+    confirmNewPassword: Joi.any()
+        .valid(Joi.ref("newPassword"))
+        .required()
+        .messages({ "any.only": "New passwords must match" }),
+})
+
+export const validateChangePassword = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { error } = passwordChangeSchema.validate(req.body)
+    if (error) {
+        res.status(400).json({ error: error.details[0].message })
+        return
+    }
+    next()
+}
+
 export const validateRequestType = (req: Request, res: Response, next: NextFunction) => {
     const { error } = requestSchema.validate(req.body);
     if (error) {

@@ -93,7 +93,7 @@ export const submitStudentRequest = async (req: Request, res: Response, next: Ne
             }
         }
         await departmentService.updateDepartmentTotalRequests(data.departmentId);
-        await requestTypeService.updateRequestTypeTotalRequests(data.departmentId);
+        await requestTypeService.updateRequestTypeTotalRequests(data.requestTypeId);
         if (user)
             await userService.updateUserTotalRequests(user.id);
 

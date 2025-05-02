@@ -26,6 +26,24 @@ export const submitLoginRequest = async (phone: string, password: string) => {
     return { token, user };
 };
 
+export const submitStudentLoginRequest = async (phone: string, password: string) => {
+    const user = await prisma.studentAccount.findUnique({ where: { phone } });
+    if (!user || !user.password) {
+        throw new Error('Invalid credentials');
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        throw new Error('Invalid credentials');
+    }
+
+    const token = jwt.sign(
+        { id: user.id, phone: user.phone, name: user.name, studentNo: user.studentNo },
+        JWT_SECRET
+    );
+
+    return { token, user };
+};
+
 export const changePassword = async (
     userId: string,
     currentPassword: string,
@@ -46,6 +64,33 @@ export const changePassword = async (
     // 3) hash & update
     const hashed = await bcrypt.hash(newPassword, 10)
     await prisma.user.update({
+        where: { id: userId },
+        data: { password: hashed },
+    })
+
+    return { message: "Password changed successfully" }
+}
+
+export const changeStudentPassword = async (
+    userId: string,
+    currentPassword: string,
+    newPassword: string
+) => {
+    // 1) fetch user
+    const user = await prisma.studentAccount.findUnique({ where: { id: userId } })
+    if (!user || !user.password) {
+        throw new Error("User not found")
+    }
+
+    // 2) verify current password
+    const isMatch = await bcrypt.compare(currentPassword, user.password)
+    if (!isMatch) {
+        throw new Error("Current password is incorrect")
+    }
+
+    // 3) hash & update
+    const hashed = await bcrypt.hash(newPassword, 10)
+    await prisma.studentAccount.update({
         where: { id: userId },
         data: { password: hashed },
     })

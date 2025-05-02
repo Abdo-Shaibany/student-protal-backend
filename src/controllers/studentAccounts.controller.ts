@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import * as userService from '../services/user.service';
+import * as userService from '../services/studentAcocunt.service';
 
 /**
  * GET /api/users
@@ -8,7 +8,7 @@ import * as userService from '../services/user.service';
 export const getStudentAccounts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { search, orderBy } = req.query
     try {
-        const users = await userService.fetchUsers(search as string | undefined, orderBy as string | undefined);
+        const users = await userService.fetchStudentAccounts(search as string | undefined, orderBy as string | undefined);
         res.json(users);
     } catch (error) {
         next(error);
@@ -20,10 +20,10 @@ export const getStudentAccounts = async (req: Request, res: Response, next: Next
  * Create a new user.
  * Expected payload: { name, phone, departmentId, password, isAdmin? }
  */
-export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const createStudentAccount = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { name, phone, departmentId, password, isAdmin } = req.body;
-        const newUser = await userService.createUser({ name, phone, departmentId, password, isAdmin });
+        const { name, phone, studentNo, password } = req.body;
+        const newUser = await userService.createStudentAccount({ name, phone, studentNo, password });
         res.status(201).json(newUser);
     } catch (error) {
         next(error);
@@ -34,10 +34,10 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
  * PUT /api/users/:id
  * Update an existing user.
  */
-export const updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const updateStudentAccount = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { id } = req.params;
-        const updatedUser = await userService.updateUser(id, req.body);
+        const updatedUser = await userService.updateStudentAccount(id, req.body);
         res.json(updatedUser);
     } catch (error) {
         next(error);
@@ -48,10 +48,10 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
  * DELETE /api/users/:id
  * Delete a user.
  */
-export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const deleteStudentAccount = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { id } = req.params;
-        await userService.deleteUser(id);
+        await userService.deleteStudentAccount(id);
         res.status(204).end();
     } catch (error) {
         next(error);

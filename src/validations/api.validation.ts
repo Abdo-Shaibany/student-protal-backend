@@ -150,3 +150,37 @@ export const validateUserUpdate = (req: Request, res: Response, next: NextFuncti
     }
     next();
 };
+
+
+export const studentAccountCreateSchema = Joi.object({
+    name: Joi.string().required(),
+    phone: Joi.string().required(),
+    studentNo: Joi.string().required(),
+    password: Joi.string().required(),
+});
+
+export const studentAccountUpdateSchema = Joi.object({
+    name: Joi.string().required(),
+    phone: Joi.string().required(),
+    studentNo: Joi.string().required(),
+    password: Joi.string().optional(),
+    id: Joi.string().required(),
+});
+
+export const validateStudentAccountCreate = (req: Request, res: Response, next: NextFunction): void => {
+    const { error } = studentAccountCreateSchema.validate(req.body);
+    if (error) {
+        res.status(400).json({ error: error.details[0].message });
+        return;
+    }
+    next();
+};
+
+export const validateStudentAccountUpdate = (req: Request, res: Response, next: NextFunction): void => {
+    const { error } = studentAccountUpdateSchema.validate(req.body);
+    if (error) {
+        res.status(400).json({ error: error.details[0].message });
+        return;
+    }
+    next();
+};

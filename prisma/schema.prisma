@@ -2,7 +2,7 @@
 
 datasource db {
     provider = "sqlite"
-    url      = "file:./dev.db"
+    url      = "file:../dev.db"
 }
 
 generator client {
@@ -35,41 +35,49 @@ model RequestType {
     totalRequests Int        @default(0)
     department    Department @relation(fields: [departmentId], references: [id])
     requests      Request[]
-    users         User[]
     departmentId  String
 }
 
 model User {
-    id               String       @id @default(uuid())
+    id               String      @id @default(uuid())
     name             String
-    phone            String       @unique()
+    phone            String      @unique()
     departmentId     String?
-    department       Department?  @relation(fields: [departmentId], references: [id])
-    totalRequests    Int          @default(0)
+    department       Department? @relation(fields: [departmentId], references: [id])
+    totalRequests    Int         @default(0)
     password         String
     isAdmin          Boolean
-    assignedRequests Request[]    @relation("UserAssignedRequests")
-    RequestType      RequestType? @relation(fields: [requestTypeId], references: [id])
-    requestTypeId    String?
+    assignedRequests Request[]   @relation("UserAssignedRequests")
+}
+
+model StudentAccount {
+    id        String    @id @default(uuid())
+    name      String
+    phone     String    @unique()
+    studentNo String    @unique()
+    password  String
+    requests  Request[]
 }
 
 model Request {
-    id            String                 @id @default(uuid())
-    requestNumber String
-    studentName   String
-    phone         String
-    message       String
-    createdAt     String
-    createdAtDate String
-    status        RequestStatus
-    departmentId  String
-    assignedToId  String?
-    department    Department             @relation(fields: [departmentId], references: [id])
-    assignedTo    User?                  @relation("UserAssignedRequests", fields: [assignedToId], references: [id])
-    files         RequestFile[]
-    statusHistory RequestStatusHistory[]
-    RequestType   RequestType?           @relation(fields: [requestTypeId], references: [id])
-    requestTypeId String?
+    id               String                 @id @default(uuid())
+    requestNumber    String
+    studentName      String
+    phone            String
+    message          String
+    createdAt        String
+    createdAtDate    String
+    status           RequestStatus
+    departmentId     String
+    assignedToId     String?
+    department       Department             @relation(fields: [departmentId], references: [id])
+    assignedTo       User?                  @relation("UserAssignedRequests", fields: [assignedToId], references: [id])
+    files            RequestFile[]
+    statusHistory    RequestStatusHistory[]
+    RequestType      RequestType?           @relation(fields: [requestTypeId], references: [id])
+    requestTypeId    String?
+    StudentAccount   StudentAccount?        @relation(fields: [studentAccountId], references: [id])
+    studentAccountId String?
 }
 
 model RequestFile {

@@ -73,12 +73,13 @@ export const updateRequestStatus = async (req: Request, res: Response, next: Nex
  * Submit a new student request.
  * Expects body payload with student request data.
  */
-export const submitStudentRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const submitStudentRequest = async (req: any, res: Response, next: NextFunction): Promise<void> => {
     try {
         const data = req.body;
         const files = req.files;
         const user = await userService.getUserByDepartmentId(data.departmentId);
-        const newRequest = await requestService.submitStudentRequest({ ...data, assignedToId: user?.id });
+        const studentUser = req.user;
+        const newRequest = await requestService.submitStudentRequest({ ...data, assignedToId: user?.id, fullName: studentUser.name, phone: studentUser.phone, studentAccountId: studentUser.id });
         if (files) {
             if (Array.isArray(files)) {
                 for (const file of files) {

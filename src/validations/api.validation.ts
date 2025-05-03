@@ -77,8 +77,8 @@ export const paginationSchema = Joi.object({
 });
 
 export const requestSubmissionSchema = Joi.object({
-    fullName: Joi.string().required(),
-    phone: Joi.string().required(),
+    // fullName: Joi.string().required(),
+    // phone: Joi.string().required(),
     requestTypeId: Joi.string().required(),
     departmentId: Joi.string().required(),
     message: Joi.string().required(),

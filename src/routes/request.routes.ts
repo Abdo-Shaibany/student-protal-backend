@@ -21,6 +21,6 @@ router.get('/:id', authMiddleware, requestController.getRequestById);
 
 router.put('/:id/status', authMiddleware, validateUpdateRequestStatus, requestController.updateRequestStatus);
 
-router.post('/', upload.array('fileUpload'), validateRequestSubmission, requestController.submitStudentRequest);
+router.post('/', authMiddleware, validateRequestSubmission, upload.array('fileUpload'), requestController.submitStudentRequest);
 
 export default router;

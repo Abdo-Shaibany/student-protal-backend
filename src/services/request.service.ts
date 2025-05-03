@@ -85,6 +85,7 @@ export const submitStudentRequest = async (data: any) => {
     const now = new Date();
     const formattedDate = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'numeric', year: 'numeric' }).format(now);
     const formattedTime = new Intl.DateTimeFormat('en-GB', { hour: 'numeric', minute: 'numeric', second: 'numeric' }).format(now);
+
     return prisma.request.create({
         data: {
             requestNumber: `REQ-${Date.now()}`,
@@ -97,6 +98,7 @@ export const submitStudentRequest = async (data: any) => {
             assignedTo: data.assignedToId ? { connect: { id: data.assignedToId } } : undefined,
             createdAtDate: formattedDate,
             createdAt: formattedTime,
+            StudentAccount: { connect: { id: data.studentAccountId } },
         },
     });
 };

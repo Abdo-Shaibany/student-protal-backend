@@ -26,10 +26,16 @@ export const fetchRequests = async (pagination: Pagination, user?: any) => {
         Object.assign(where, filters);
     }
 
-    if (user && !user.isAdmin) {
+    console.log(user, 'user in fetchRequests')
+
+    if (user && !user.isAdmin && !user.studentNo) {
         where.departmentId = user.departmentId;
         where.assignedToId = user.id;
+    } else if (user && user.studentNo) {
+        where.studentAccountId = user.id;
     }
+
+    console.log(where, 'where in fetchRequests')
 
     const requests = await prisma.request.findMany({
         where,
@@ -48,6 +54,7 @@ export const fetchRequests = async (pagination: Pagination, user?: any) => {
 
     return { data: requests, total, page, pageSize };
 };
+
 
 export const fetchRequestById = async (id: string) => {
     return prisma.request.findUnique({

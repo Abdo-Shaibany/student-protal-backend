@@ -26,16 +26,22 @@ export const fetchRequests = async (pagination: Pagination, user?: any) => {
         Object.assign(where, filters);
     }
 
-    console.log(user, 'user in fetchRequests')
-
     if (user && !user.isAdmin && !user.studentNo) {
-        where.departmentId = user.departmentId;
-        where.assignedToId = user.id;
+        // where.departmentId = user.departmentId;
+        // where.assignedToId = user.id;
+
+        where.AND = [
+            {
+                OR: [
+                    { assignedToId: user.id },
+                    { RequestMovement: { some: { assignedToId: user.id } } }
+                ]
+            },
+            { departmentId: user.departmentId }
+        ];
     } else if (user && user.studentNo) {
         where.studentAccountId = user.id;
     }
-
-    console.log(where, 'where in fetchRequests')
 
     const requests = await prisma.request.findMany({
         where,
@@ -47,6 +53,7 @@ export const fetchRequests = async (pagination: Pagination, user?: any) => {
             assignedTo: true,
             files: true,
             statusHistory: true,
+            RequestMovement: true,
         },
     });
 

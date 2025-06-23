@@ -39,15 +39,16 @@ model RequestType {
 }
 
 model User {
-    id               String      @id @default(uuid())
+    id               String            @id @default(uuid())
     name             String
-    phone            String      @unique()
+    phone            String            @unique()
     departmentId     String?
-    department       Department? @relation(fields: [departmentId], references: [id])
-    totalRequests    Int         @default(0)
+    department       Department?       @relation(fields: [departmentId], references: [id])
+    totalRequests    Int               @default(0)
     password         String
     isAdmin          Boolean
-    assignedRequests Request[]   @relation("UserAssignedRequests")
+    assignedRequests Request[]         @relation("UserAssignedRequests")
+    RequestMovement  RequestMovement[]
 }
 
 model StudentAccount {
@@ -78,6 +79,16 @@ model Request {
     requestTypeId    String?
     StudentAccount   StudentAccount?        @relation(fields: [studentAccountId], references: [id])
     studentAccountId String?
+    RequestMovement  RequestMovement[]
+}
+
+model RequestMovement {
+    id           String   @id @default(uuid())
+    request      Request  @relation(fields: [requestId], references: [id])
+    requestId    String
+    assignedTo   User?    @relation(fields: [assignedToId], references: [id])
+    assignedToId String?
+    date         DateTime @default(now())
 }
 
 model RequestFile {

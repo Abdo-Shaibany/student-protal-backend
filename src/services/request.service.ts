@@ -71,7 +71,12 @@ export const fetchRequestById = async (id: string) => {
             assignedTo: true,
             files: true,
             statusHistory: true,
-            RequestType: true
+            RequestType: true,
+            RequestMovement: {
+                include: {
+                    assignedTo: true,
+                }
+            },
         },
     });
 };

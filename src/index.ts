@@ -20,7 +20,7 @@ app.use('/api/requests', requestRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/requestTypes', requestTypes);
 app.use('/api/studentAccount', studentAccount);
-app.use('/api/requestMovements', requestMovements);
+app.use('/api/request-movements', requestMovements);
 
 // Global error handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

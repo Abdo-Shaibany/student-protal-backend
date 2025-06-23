@@ -4,20 +4,20 @@ import { validateCreateRequestMovement, validateUpdateRequestMovement } from '..
 
 const router = express.Router();
 
-router.get('/request-movements', requestMovementController.getRequestMovements);
+router.get('/', requestMovementController.getRequestMovements);
 
 router.post(
-    '/request-movements',
+    '/',
     validateCreateRequestMovement,
     requestMovementController.createRequestMovement
 );
 
 router.put(
-    '/request-movements/:id',
+    '/:id',
     validateUpdateRequestMovement,
     requestMovementController.updateRequestMovement
 );
 
-router.delete('/request-movements/:id', requestMovementController.deleteRequestMovement);
+router.delete('/:id', requestMovementController.deleteRequestMovement);
 
 export default router;

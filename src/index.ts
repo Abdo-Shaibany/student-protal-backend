@@ -6,6 +6,7 @@ import requestRoutes from './routes/request.routes';
 import userRoutes from './routes/user.routes';
 import requestTypes from './routes/requestType.route';
 import studentAccount from './routes/studentAccount.routes';
+import requestMovements from './routes/requestMovement.routes';
 
 const app = express();
 app.use(cors());
@@ -19,6 +20,7 @@ app.use('/api/requests', requestRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/requestTypes', requestTypes);
 app.use('/api/studentAccount', studentAccount);
+app.use('/api/requestMovements', requestMovements);
 
 // Global error handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

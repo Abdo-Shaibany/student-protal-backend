@@ -1,6 +1,35 @@
 import { Request, Response, NextFunction } from 'express';
 import Joi from 'joi';
 
+const requestMovementSchema = Joi.object({
+    requestId: Joi.string().uuid().required(),
+    assignedToId: Joi.string().uuid().optional().allow(null),
+    date: Joi.date().iso().optional(),
+});
+
+export const validateCreateRequestMovement = (req: Request, res: Response, next: NextFunction) => {
+    const { error } = requestMovementSchema.validate(req.body);
+    if (error) {
+        res.status(400).json({ error: error.details[0].message });
+        return;
+    }
+    next();
+};
+
+const requestMovementUpdateSchema = Joi.object({
+    assignedToId: Joi.string().uuid().optional().allow(null),
+    date: Joi.date().iso().optional(),
+}).or('assignedToId', 'date');
+
+export const validateUpdateRequestMovement = (req: Request, res: Response, next: NextFunction) => {
+    const { error } = requestMovementUpdateSchema.validate(req.body);
+    if (error) {
+        res.status(400).json({ error: error.details[0].message });
+        return;
+    }
+    next();
+};
+
 const departmentSchema = Joi.object({
     name: Joi.string().required(),
     id: Joi.string().optional(),

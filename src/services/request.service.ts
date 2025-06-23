@@ -34,10 +34,10 @@ export const fetchRequests = async (pagination: Pagination, user?: any) => {
             {
                 OR: [
                     { assignedToId: user.id },
-                    { RequestMovement: { some: { assignedToId: user.id } } }
+                    { RequestMovement: { some: { assignedToId: user.id } } },
+                    { departmentId: user.departmentId }
                 ]
             },
-            { departmentId: user.departmentId }
         ];
     } else if (user && user.studentNo) {
         where.studentAccountId = user.id;
